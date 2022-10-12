@@ -2,12 +2,12 @@
     <v-container>
         <v-card>
             <v-card-title class="text-h5 info--text">
-              MyMeetUp
+              {{ meetup.title }}
             </v-card-title>
-            <v-img src="https://thumbs.dreamstime.com/z/areal-view-rome-italy-beautiful-old-city-full-historical-amazing-buildings-cathedrals-bridges-areal-view-rome-italy-168049696.jpg" height="200" class="ml-2">
+            <v-img :src="meetup.imageUrl" height="200" class="ml-2">
             </v-img>
             <v-card-subtitle>
-                <span class="info--text">21 Dec 2021</span>
+                <span class="info--text">{{ meetup.date }}</span>
                 <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt harum, temporibus iure dolor asperiores</p>
             </v-card-subtitle>
             <v-card-actions>
@@ -22,9 +22,12 @@
 
 <script>
 export default {
-  name: 'MeetupView'
-  // mounted () {
-  //   alert('Hi')
-  // }
+  props: ['id'],
+  name: 'MeetupView',
+  computed: {
+    meetup () {
+      return this.$store.getters.loadedMeetup(this.id)
+    }
+  }
 }
 </script>
