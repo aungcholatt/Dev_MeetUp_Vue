@@ -1,3 +1,77 @@
 <template>
-    <div><h1>CreateMeetupPage</h1></div>
+    <v-container>
+        <v-card color="#385F73" theme="dark">
+            <v-sheet row class="justify-center">
+                <h4 class="text-white">Create a new Meetup</h4>
+            </v-sheet>
+            <form @submit.prevent="onCreateMeetup()">
+                <v-container>
+                    <v-col cols="12">
+                        <v-text-field name="title" label="Title" id="title" v-model="title" required></v-text-field>
+                        <v-text-field name="location" label="Location" id="location" v-model="location" required>
+                        </v-text-field>
+                        <v-text-field name="imageUrl" label="Image URL" id="image-url" v-model="imageUrl" required>
+                        </v-text-field>
+                        <img :src="imageUrl">
+                        <v-text-field name="description" label="Description" id="description" v-model="description"
+                            multi-line required></v-text-field>
+                        <h5 class="text-info">Choose a Date & Time</h5>
+                        <div class="mb-2">
+                        <v-row justify="center">
+                        <v-col>
+                        <v-date-picker v-model="date"></v-date-picker>
+                        <p>{{ date }}</p>
+                        </v-col>
+                        </v-row>
+                        </div>
+                        <v-row justify="center">
+                                <v-col>
+                                    <v-time-picker v-model="time" format="24hr"></v-time-picker>
+                                </v-col>
+                              <!-- <v-time-picker v-model="time" :allowed-hours="allowedHours" :allowed-minutes="allowedMinutes" class="mt-4" format="24hr"
+                                scrollable min="9:30" max="22:15"></v-time-picker> -->
+                        <p>{{ time }}</p>
+                       </v-row>
+                    </v-col>
+                </v-container>
+                <v-sheet row class="d-flex justify-center">
+                    <v-btn color="primary" type="submit">CreateMeetup</v-btn>
+                </v-sheet>
+            </form>
+        </v-card>
+    </v-container>
 </template>
+<script>
+export default {
+  name: 'HomeView',
+  data: () => ({
+    title: '',
+    location: '',
+    imageUrl: '',
+    description: '',
+    date: new Date(),
+    time: new Date()
+  }),
+  computed: {
+    formIsValid () {
+      return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== ''
+    }
+  },
+  methods: {
+    onCreateMeetup () {
+      if (!this.formIsValid) {
+        return
+      }
+      const meetupData = {
+        title: this.title,
+        location: this.location,
+        imageUrl: this.imageUrl,
+        description: this.description,
+        date: new Date()
+      }
+      this.$store.dispatch('createMeetup', meetupData)
+      this.$router.push('/meetups')
+    }
+  }
+}
+</script>
