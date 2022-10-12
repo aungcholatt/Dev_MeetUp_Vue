@@ -53,14 +53,16 @@ export default {
     location: '',
     imageUrl: '',
     description: '',
-    date: new Date(),
-    time: new Date()
+    date: '',
+    time: ''
+
   }),
   computed: {
     formIsValid () {
       return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== ''
     }
   },
+
   methods: {
     onCreateMeetup () {
       if (!this.formIsValid) {
@@ -71,8 +73,7 @@ export default {
         location: this.location,
         imageUrl: this.imageUrl,
         description: this.description,
-        date: new Date(),
-        time: new Date()
+        date: new Date()
       }
       this.$store.dispatch('createMeetup', meetupData)
       this.$router.push('/meetups')
