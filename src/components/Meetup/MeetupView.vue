@@ -7,8 +7,8 @@
             <v-img :src="meetup.imageUrl" height="200" class="ml-2">
             </v-img>
             <v-card-subtitle>
-                <span class="info--text">{{ meetup.date }}</span>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt harum, temporibus iure dolor asperiores</p>
+                <span class="info--text">{{ meetup.date }} - {{ meetup.location }}</span>
+                <p>{{ meetup.description }}</p>
             </v-card-subtitle>
             <v-card-actions>
               <v-spacer></v-spacer>

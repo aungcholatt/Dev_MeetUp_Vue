@@ -55,14 +55,26 @@ export default {
     description: '',
     date: '',
     time: ''
-
   }),
   computed: {
     formIsValid () {
       return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== ''
+    },
+    submittableDateTime () {
+      const date = new Date(this.date)
+      if (typeof this.time === 'string') {
+        const hours = this.time.match(/^(\d+)/)[1]
+        const minutes = this.time.match(/:(\d+)/)[1]
+        date.setHours(hours)
+        date.setMinutes(minutes)
+      } else {
+        date.setHours(this.time.getHours())
+        date.setMinutes(this.time.getMinutes())
+      }
+      // console.log(date)
+      return date
     }
   },
-
   methods: {
     onCreateMeetup () {
       if (!this.formIsValid) {
@@ -73,7 +85,7 @@ export default {
         location: this.location,
         imageUrl: this.imageUrl,
         description: this.description,
-        date: new Date()
+        date: this.submittableDateTime
       }
       this.$store.dispatch('createMeetup', meetupData)
       this.$router.push('/meetups')
