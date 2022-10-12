@@ -15,7 +15,7 @@
                         <img :src="imageUrl">
                         <v-text-field name="description" label="Description" id="description" v-model="description"
                             multi-line required></v-text-field>
-                        <h5 class="text-info">Choose a Date & Time</h5>
+                        <!-- <h5 class="text-info">Choose a Date & Time</h5>
                         <div class="mb-2">
                         <v-row justify="center">
                         <v-col>
@@ -25,13 +25,10 @@
                         </v-row>
                         </div>
                         <v-row justify="center">
-                                <v-col>
-                                    <v-time-picker v-model="time" format="24hr"></v-time-picker>
-                                </v-col>
-                              <!-- <v-time-picker v-model="time" :allowed-hours="allowedHours" :allowed-minutes="allowedMinutes" class="mt-4" format="24hr"
-                                scrollable min="9:30" max="22:15"></v-time-picker> -->
+                              <v-time-picker v-model="time" :allowed-hours="allowedHours" :allowed-minutes="allowedMinutes" class="mt-4" format="24hr"
+                                scrollable min="9:30" max="22:15"></v-time-picker>
                         <p>{{ time }}</p>
-                       </v-row>
+                       </v-row> -->
                     </v-col>
                 </v-container>
                 <v-sheet row class="d-flex justify-center">
