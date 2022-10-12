@@ -1,12 +1,12 @@
 <template>
     <v-container>
-        <v-card color="#385F73" theme="dark">
-            <v-sheet row class="justify-center">
-                <h4 class="text-white">Create a new Meetup</h4>
+        <v-card>
+            <v-sheet row class="d-flex justify-center">
+                <h3 class="info--text">Create a new Meetup</h3>
             </v-sheet>
             <form @submit.prevent="onCreateMeetup()">
                 <v-container>
-                    <v-col cols="12">
+                    <v-col cols="12" class="">
                         <v-text-field name="title" label="Title" id="title" v-model="title" required></v-text-field>
                         <v-text-field name="location" label="Location" id="location" v-model="location" required>
                         </v-text-field>
