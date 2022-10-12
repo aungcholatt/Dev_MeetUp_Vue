@@ -20,7 +20,7 @@
                         <div class="mb-2">
                         <v-row>
                         <v-col>
-                        <v-date-picker v-model="picker"></v-date-picker>
+                        <v-date-picker v-model="date"></v-date-picker>
                         <p>{{ date }}</p>
                         </v-col>
                         </v-row>
@@ -30,7 +30,7 @@
                         <div>
                         <v-row>
                           <v-col>
-                          <v-time-picker v-model="picker" scrollable></v-time-picker>
+                          <v-time-picker v-model="time"></v-time-picker>
                           <p>{{ time }}</p>
                           </v-col>
                        </v-row>
@@ -71,7 +71,8 @@ export default {
         location: this.location,
         imageUrl: this.imageUrl,
         description: this.description,
-        date: new Date()
+        date: new Date(),
+        time: new Date()
       }
       this.$store.dispatch('createMeetup', meetupData)
       this.$router.push('/meetups')
