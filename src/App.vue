@@ -1,0 +1,56 @@
+<template>
+  <div id="app">
+    <v-app id="inspire">
+      <v-sheet>
+        <v-toolbar color="purple darken-1 white--text">
+          <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="hidden-sm-and-up" color="white">
+          </v-app-bar-nav-icon>
+          <v-toolbar-title>
+            <router-link to="/" custom style="cursor: pointer" v-slot="{ navigate }">
+              <span @click="navigate">DevMeetUp</span>
+            </router-link>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items class="hidden-xs-only">
+            <v-btn depressed v-for="item in menuItems" :key="item.title" class="purple darken-1 white--text" router
+              :to="item.link">
+              <v-icon left>{{ item.icon }}</v-icon>
+              {{ item.title }}
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-main>
+          <router-view></router-view>
+        </v-main>
+        <v-navigation-drawer v-model="drawer" absolute temporary>
+          <v-list>
+            <v-list-item-title>
+              <v-card class="px-5 py-5 white--text" color="primary" v-for="item in menuItems" :key="item.title"
+                router :to="item.link">
+                <v-icon left class="white--text">{{ item.icon }}</v-icon>
+                {{ item.title }}
+              </v-card>
+            </v-list-item-title>
+          </v-list>
+        </v-navigation-drawer>
+      </v-sheet>
+    </v-app>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      drawer: false,
+      menuItems: [
+        { icon: 'mdi-account-supervisor', title: 'ViewMeetUps', link: '/acct' },
+        { icon: 'mdi-map-marker', title: 'Organize MeetUp', link: '/meetup/new' },
+        { icon: 'mdi-account', title: 'Profile', link: '/profile' },
+        { icon: 'mdi-account-plus-outline', title: 'SignUp', link: 'signup' },
+        { icon: 'mdi-lock-open', title: 'SignIn', link: '/signin' }
+      ]
+    }
+  }
+}
+</script>
