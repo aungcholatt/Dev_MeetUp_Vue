@@ -16,21 +16,26 @@
                         <v-text-field name="description" label="Description" id="description" v-model="description"
                             multi-line required></v-text-field>
                         <h5 class="text-info">Choose a Date & Time</h5>
+                        <v-sheet class="d-flex justify-center">
                         <div class="mb-2">
-                        <v-row justify="center">
+                        <v-row>
                         <v-col>
                         <v-date-picker v-model="picker"></v-date-picker>
                         <p>{{ date }}</p>
                         </v-col>
                         </v-row>
                         </div>
+                        </v-sheet>
+                        <v-sheet class="d-flex justify-center">
                         <div>
-                        <v-row justify="center">
+                        <v-row>
                           <v-col>
-                                <v-time-picker v-model="picker" scrollable></v-time-picker>
+                          <v-time-picker v-model="picker" scrollable></v-time-picker>
+                          <p>{{ time }}</p>
                           </v-col>
                        </v-row>
                        </div>
+                      </v-sheet>
                     </v-col>
                 </v-container>
                 <v-sheet row class="d-flex justify-center">
