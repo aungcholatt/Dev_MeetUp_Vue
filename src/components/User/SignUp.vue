@@ -4,14 +4,14 @@
             <v-sheet row class="d-flex justify-center">
                 <h3 class="info--text">SignUp</h3>
             </v-sheet>
-            <form @submit.prevent="">
+            <form @submit.prevent="onSignup">
                 <v-container>
                     <v-col cols="12" class="">
                         <v-text-field name="email" label="Email" id="email" v-model="email" type="email" required>
                         </v-text-field>
                         <v-text-field name="password" label="Password" id="password" v-model="password" type="password" required>
                         </v-text-field>
-                        <v-text-field name="confirmpassword" label="ConfirmPassword" id="confirmpassword" v-model="confirmpassword" type="confirmpassword" required>
+                        <v-text-field name="confirmpassword" label="ConfirmPassword" id="confirmpassword" v-model="confirmpassword" type="password" :rules="[comparePasswords]">
                         </v-text-field>
                     </v-col>
                 </v-container>
@@ -28,8 +28,9 @@ export default {
   name: 'SignUp',
   data () {
     return {
+      email: '',
       password: '',
-      confirmPassword: ''
+      confirmpassword: ''
     }
   },
   computed: {
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     onSignup () {
-      console.log({ email: this.email, password: this.password, confirmPassword: this.confirmPassword })
+      console.log({ email: this.email, password: this.password, confirmpassword: this.confirmpassword })
     }
   }
 }
