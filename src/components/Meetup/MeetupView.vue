@@ -13,7 +13,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn absolute bottom right color="purple" class="white--text">
-                Rigestier
+                Registier
               </v-btn>
             </v-card-actions>
         </v-card>
