@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card class="mx-auto mt-4" max-width="600">
       <v-sheet row class="d-flex justify-center">
-        <h3 class="info--text">signin</h3>
+        <h3 class="info--text">SignIn</h3>
       </v-sheet>
       <form @submit.prevent="onSignIn">
         <v-container>

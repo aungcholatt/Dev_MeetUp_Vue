@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card class="mx-auto mt-4" max-width="600">
             <v-sheet row class="d-flex justify-center">
                 <h3 class="info--text">SignUp</h3>
             </v-sheet>
