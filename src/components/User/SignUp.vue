@@ -24,6 +24,7 @@
 </template>
 
 <script>
+// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 export default {
   name: 'SignUp',
   data () {
@@ -36,11 +37,36 @@ export default {
   computed: {
     comparePasswords () {
       return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
+    },
+    user () {
+      return this.$store.getters.user
+    }
+  },
+  //  Vue Instance
+  watch: {
+    user (value) {
+      if (value !== null && value !== undefined) {
+        this.$router.push('/')
+      }
     }
   },
   methods: {
+    // register () {
+    //   createUserWithEmailAndPassword(getAuth(), this.email, this.password).then((data) => {
+    //     console.log('successfully registered')
+    //   })
+    //     .catch((error) => {
+    //       console.log(error.code)
+    //       alert(error.message)
+    //     })
+    // }
     onSignup () {
-      console.log({ email: this.email, password: this.password, confirmpassword: this.confirmpassword })
+      this.$store.dispatch('signUserUp', { email: this.email, password: this.password })
+      // console.log('signUserUp', { email: this.email, password: this.password })
+    },
+    onDismissed () {
+      console.log('Dismissed Alert!')
+      this.$store.dispatch('clearError')
     }
   }
 }

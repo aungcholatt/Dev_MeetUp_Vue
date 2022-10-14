@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
 Vue.use(Vuex)
 
@@ -10,10 +11,7 @@ export default new Vuex.Store({
       { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: '23-10-2021', location: 'Paris', description: 'It is Paris' },
       { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: '23-10-2020', location: 'London', description: 'It is London' }
     ],
-    user: {
-      id: 'ajgregedffdw12',
-      registeredMeetups: ['aadsfhbkhlk1242']
-    }
+    user: null
   },
   getters: {
     loadedMeetups (state) {
@@ -30,11 +28,17 @@ export default new Vuex.Store({
           return meetup.id === meetupId
         })
       }
+    },
+    user (state) {
+      return state.user
     }
   },
   mutations: {
     createMeetup (state, payload) {
       state.loadedMeetups.push(payload)
+    },
+    setUser (state, payload) {
+      state.user = payload
     }
   },
   actions: {
@@ -49,6 +53,23 @@ export default new Vuex.Store({
       }
       // Store it in Firebase
       commit('createMeetup', meetup)
+    },
+    signUserUp ({ commit }, payload) {
+      createUserWithEmailAndPassword(getAuth(), payload.email, payload.password)
+        .then(
+          user => {
+            const newUser = {
+              id: user.uid,
+              registeredMeetups: []
+            }
+            commit('setUser', newUser)
+          }
+        )
+        .catch(
+          error => {
+            console.log(error)
+          }
+        )
     }
   },
   modules: {
