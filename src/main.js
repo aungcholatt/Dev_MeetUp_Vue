@@ -3,9 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-// import * as firebase from './firebase'
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
+import AlertCmp from './components/Shared/AlertView.vue'
 
 //
 const firebaseConfig = {
@@ -20,6 +19,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig)
 
 Vue.config.productionTip = false
+Vue.component('app-alert', AlertCmp)
 
 new Vue({
   router,

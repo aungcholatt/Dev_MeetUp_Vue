@@ -1,11 +1,13 @@
 <template>
     <v-container>
-        <v-row class="mb-1 justify-center">
+      <v-sheet class="mx-auto mt-4" max-width="800">
+        <v-row class="mb-1 justify-center ">
           <v-col cols="6">
             <v-btn rounded router to="/acct" color="purple darken-1" class="mr-2 mb-1 white--text">Explore Meetups</v-btn>
             <v-btn rounded router to="/meetup/new" color="purple darken-1" class="white--text">Organize Meetups</v-btn>
             </v-col>
          </v-row>
+         </v-sheet>
             <v-sheet class="mt-1 flex-column">
                 <v-carousel style="cursor: pointer;">
                     <v-carousel-item v-for="meetup in meetups" :src="meetup.imageUrl" :key="meetup.id"
