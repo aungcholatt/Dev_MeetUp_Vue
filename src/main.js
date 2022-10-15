@@ -4,19 +4,8 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import { initializeApp } from 'firebase/app'
+import { getDatabase } from 'firebase/database'
 import AlertCmp from './components/Shared/AlertView.vue'
-
-//
-const firebaseConfig = {
-  apiKey: 'AIzaSyBlUdHCJkgQancGS3ymM15kJAQSoAfYssA',
-  authDomain: 'meetup-9dbba.firebaseapp.com',
-  projectId: 'meetup-9dbba',
-  storageBucket: 'meetup-9dbba.appspot.com',
-  messagingSenderId: '450507481014',
-  appId: '1:450507481014:web:6d6bbd9cc029999f5deb17'
-}
-
-initializeApp(firebaseConfig)
 
 Vue.config.productionTip = false
 Vue.component('app-alert', AlertCmp)
@@ -28,11 +17,16 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-// firebase.initializeApp({
-//   apiKey: 'AIzaSyBAMdeKVkbfjma1O2JzuqHEjJ-ZyJ99bPQ',
-//   authDomain: 'dvmeetup.firebaseapp.com',
-//   projectId: 'dvmeetup',
-//   storageBucket: 'dvmeetup.appspot.com',
-//   messagingSenderId: '313664811334',
-//   appId: '1:313664811334:web:537e8c1a467631fc303547'
-// })
+const firebaseConfig = {
+  apiKey: 'AIzaSyDe-MI6kVKEFYl9tDl-W4r2_oP3sCcSuf4',
+  authDomain: 'devmeetup-2be2f.firebaseapp.com',
+  databaseURL: 'https://devmeetup-2be2f-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'devmeetup-2be2f',
+  storageBucket: 'devmeetup-2be2f.appspot.com',
+  messagingSenderId: '117216801789',
+  appId: '1:117216801789:web:b36358cd560bf10cb39f94'
+}
+
+initializeApp(firebaseConfig)
+const db = getDatabase()
+export { db }

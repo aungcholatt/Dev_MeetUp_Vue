@@ -76,7 +76,6 @@ export default {
       // console.log('signUserUp', { email: this.email, password: this.password })
     },
     onDismissed () {
-      // console.log('Dismissed Alert!')
       this.$store.dispatch('clearError')
     }
   }

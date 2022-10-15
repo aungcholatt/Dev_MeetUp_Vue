@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-// import { FirebaseError } from 'firebase/app'
+import { getDatabase, ref, set } from 'firebase/database'
 
 Vue.use(Vuex)
 
@@ -66,11 +66,23 @@ export default new Vuex.Store({
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
-        date: payload.date,
-        id: 'fvcasjdfkj777'
+        date: payload.date.toISOString()
       }
-      // Store it in Firebase
-      commit('createMeetup', meetup)
+      function writeUserData (meetup) {
+        const db = getDatabase()
+        set(ref(db, 'meetups/' + meetup.payload), {
+        // set(ref(db, 'meetups/'+ meetupId ), {
+          title: payload.title,
+          location: payload.location,
+          imageUrl: payload.imageUrl,
+          description: payload.description,
+          date: payload.date.toISOString()
+        })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+      writeUserData('createMeetup', meetup)
     },
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
