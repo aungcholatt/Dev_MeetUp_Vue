@@ -70,8 +70,9 @@ export default new Vuex.Store({
       }
       function writeUserData (meetup) {
         const db = getDatabase()
-        set(ref(db, 'meetups/' + meetup.payload), {
-        // set(ref(db, 'meetups/'+ meetupId ), {
+        // const meetupsId = meetup.Id
+        set(ref(db, 'meetups/' + meetup), {
+          // set(ref(db, 'meetups/'+ meetupId ), {
           title: payload.title,
           location: payload.location,
           imageUrl: payload.imageUrl,
@@ -82,7 +83,8 @@ export default new Vuex.Store({
             console.log(error)
           })
       }
-      writeUserData('createMeetup', meetup)
+      writeUserData()
+      commit('createMeetup', meetup)
     },
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
