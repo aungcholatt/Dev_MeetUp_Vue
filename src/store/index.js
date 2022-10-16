@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { getDatabase, ref, set } from 'firebase/database'
+import { getDatabase, DataSnapshot, push, ref, set } from 'firebase/database'
 
 Vue.use(Vuex)
 
@@ -43,6 +43,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setLoadedMeetups (state, payload) {
+      state.loadedMeetups = payload
+    },
     createMeetup (state, payload) {
       state.loadedMeetups.push(payload)
     },
@@ -60,6 +63,44 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    loadMeetups ({ commit }) {
+      // const commentsRef = ref(db, 'post-comments/' + postId);
+      // onChildChanged(commentsRef, (data) => {
+      //   setCommentValues(postElement, data.key, data.val().text, data.val().author)
+      // }),
+      const db = getDatabase()
+      const GetdataRef = ref(db, 'devmeetups/', 'NERa8UaKsQ1tZuj78B6')
+      DataSnapshot(GetdataRef)
+        .then((doc) => {
+          console.log(doc.data(), doc.id)
+        })
+      // onValue(GetdataRef, (snapshot) => {
+      //   snapshot.forEach((childSnapshot) => {
+      //     const childKey = childSnapshot.key
+      //     const obj = childSnapshot.val()
+      //     const key = obj.id
+      //     childKey.push({
+      //       id: key,
+      //       title: obj[key].title,
+      //       description: obj[key].description,
+      //       imageUrl: obj[key].imageUrl,
+      //       date: obj[key].date
+      //     })
+      //   })
+      // },
+      // commit('setLoadedMeetups', 'meetups')
+      // )
+      // const commentsRef = ref(db, 'post-comments/' + postId)
+      // onValue(commmetsRef, (snapshot) => {
+      //   shapshot.forEach((childSnapshot) => {
+      //     const childKey = childSnapshot.key
+      //     const childData = childSnapshot.val()
+      //   })
+      // },
+      // {
+      //   onlyOnce: true
+      // })
+    },
     createMeetup ({ commit }, payload) {
       const meetup = {
         title: payload.title,
@@ -68,11 +109,13 @@ export default new Vuex.Store({
         description: payload.description,
         date: payload.date.toISOString()
       }
-      function writeUserData (meetup) {
+      function writeUserData () {
         const db = getDatabase()
-        // const meetupsId = meetup.Id
-        set(ref(db, 'meetups/' + meetup), {
-          // set(ref(db, 'meetups/'+ meetupId ), {
+        const meetUpsRef = ref(db, 'devmeetups/', 'meetups')
+        const newMeetupRef = push(meetUpsRef)
+        const data = newMeetupRef
+        console.log(data)
+        set(newMeetupRef, {
           title: payload.title,
           location: payload.location,
           imageUrl: payload.imageUrl,

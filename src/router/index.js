@@ -17,7 +17,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/acct',
+    path: '/accv',
     name: 'meetupsview',
     component: Meetups
   },

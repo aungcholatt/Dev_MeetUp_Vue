@@ -53,7 +53,7 @@ export default {
       ]
       if (this.userIsAuthenticated) {
         menuItems = [
-          { icon: 'mdi-account-supervisor', title: 'ViewMeetUps', link: '/acct' },
+          { icon: 'mdi-account-supervisor', title: 'ViewMeetUps', link: '/accv' },
           { icon: 'mdi-map-marker', title: 'Organize MeetUp', link: '/meetup/new' },
           { icon: 'mdi-account', title: 'Profile', link: '/profile' }
         ]

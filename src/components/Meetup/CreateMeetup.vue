@@ -88,7 +88,7 @@ export default {
         date: this.submittableDateTime
       }
       this.$store.dispatch('createMeetup', meetupData)
-      this.$router.push('/acct')
+      this.$router.push('/accv/')
     }
   }
 }
