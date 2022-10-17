@@ -21,15 +21,16 @@ new Vue({
 }).$mount('#app')
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDe-MI6kVKEFYl9tDl-W4r2_oP3sCcSuf4',
-  authDomain: 'devmeetup-2be2f.firebaseapp.com',
-  databaseURL: 'https://devmeetup-2be2f-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: 'devmeetup-2be2f',
-  storageBucket: 'devmeetup-2be2f.appspot.com',
-  messagingSenderId: '117216801789',
-  appId: '1:117216801789:web:b36358cd560bf10cb39f94'
+  apiKey: 'AIzaSyBAMdeKVkbfjma1O2JzuqHEjJ-ZyJ99bPQ',
+  authDomain: 'dvmeetup.firebaseapp.com',
+  databaseURL: 'https://dvmeetup-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'dvmeetup',
+  storageBucket: 'dvmeetup.appspot.com',
+  messagingSenderId: '313664811334',
+  appId: '1:313664811334:web:537e8c1a467631fc303547'
 }
-
 initializeApp(firebaseConfig)
 const db = getDatabase()
 export { db }
+
+// this.$store.dispatch('loadMeetups')

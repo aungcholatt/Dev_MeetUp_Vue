@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-subtitle>{{ meetup.date }}</v-card-subtitle>
         <v-card-actions>
-            <v-btn :to="'/meetups/'+ meetup.id" color="purple darken-1" class="white--text">
+            <v-btn :to="'/meetup/'+ meetup.id" color="purple darken-1" class="white--text">
                 <v-icon left>mdi-arrow-right-thick</v-icon>
                 ViewMeetUp
             </v-btn>
@@ -26,9 +26,13 @@
 <script>
 export default {
   name: 'MeetupsView',
+  mounted () {
+
+  },
   computed: {
     meetups () {
       return this.$store.getters.loadedMeetups
+      // return console.log(this.$store.state.loadmeetups[0].title)
     }
   }
 }

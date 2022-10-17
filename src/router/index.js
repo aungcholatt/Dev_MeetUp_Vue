@@ -17,8 +17,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/accv',
+    path: '/accv/',
     name: 'meetupsview',
+    props: true,
     component: Meetups
   },
   {
@@ -27,7 +28,7 @@ const routes = [
     component: CreateMeetup
   },
   {
-    path: '/meetups/:id',
+    path: '/meetup/:id',
     name: 'meetupview',
     props: true,
     component: Meetup

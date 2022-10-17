@@ -4,7 +4,7 @@
             <v-sheet row class="d-flex justify-center">
                 <h3 class="info--text">Create a new Meetup</h3>
             </v-sheet>
-            <form @submit.prevent="onCreateMeetup">
+            <form @submit.prevent="onCreateMeetup()">
                 <v-container>
                     <v-col cols="12" class="">
                         <v-text-field name="title" label="Title" id="title" v-model="title" required></v-text-field>
@@ -81,6 +81,7 @@ export default {
         return
       }
       const meetupData = {
+        id: this.id,
         title: this.title,
         location: this.location,
         imageUrl: this.imageUrl,
