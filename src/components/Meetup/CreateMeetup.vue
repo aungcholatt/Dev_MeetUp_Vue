@@ -10,7 +10,7 @@
                         <v-text-field name="title" label="Title" id="title" v-model="title" required></v-text-field>
                         <v-text-field name="location" label="Location" id="location" v-model="location" required>
                         </v-text-field>
-                        <v-text-field name="imageUrl" label="Image URL" id="image-url" v-model="imageUrl" required>
+                        <v-text-field name="imageUrl" label="Image URL" id="image-url" class="shrink" v-model="imageUrl" required>
                         </v-text-field>
                         <img :src="imageUrl">
                         <v-text-field name="description" label="Description" id="description" v-model="description"
@@ -38,9 +38,10 @@
                       </v-sheet>
                     </v-col>
                 </v-container>
-                <v-sheet row class="d-flex justify-center">
+                <v-sheet row class="d-flex justify-center mt-3">
                     <v-btn color="primary" type="submit">CreateMeetup</v-btn>
                 </v-sheet>
+                <span>&nbsp;</span>
             </form>
         </v-card>
     </v-container>
@@ -71,7 +72,6 @@ export default {
         date.setHours(this.time.getHours())
         date.setMinutes(this.time.getMinutes())
       }
-      // console.log(date)
       return date
     }
   },
@@ -81,7 +81,6 @@ export default {
         return
       }
       const meetupData = {
-        id: this.id,
         title: this.title,
         location: this.location,
         imageUrl: this.imageUrl,

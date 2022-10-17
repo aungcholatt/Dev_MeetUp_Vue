@@ -32,7 +32,6 @@ export default {
   computed: {
     meetups () {
       return this.$store.getters.loadedMeetups
-      // return console.log(this.$store.state.loadmeetups[0].title)
     }
   }
 }

@@ -19,7 +19,6 @@ const routes = [
   {
     path: '/accv/',
     name: 'meetupsview',
-    props: true,
     component: Meetups
   },
   {

@@ -32,13 +32,13 @@
                       </template>
                       SignUp</v-btn>
                 </v-sheet>
+                <span>&nbsp;</span>
             </form>
         </v-card>
     </v-container>
 </template>
 
 <script>
-// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 export default {
   name: 'SignUp',
   data () {
@@ -73,7 +73,6 @@ export default {
   methods: {
     onSignup () {
       this.$store.dispatch('signUserUp', { email: this.email, password: this.password })
-      // console.log('signUserUp', { email: this.email, password: this.password })
     },
     onDismissed () {
       this.$store.dispatch('clearError')
