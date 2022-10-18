@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card class="mx-auto mt-4" max-width="800">
             <v-sheet row class="d-flex justify-center">
                 <h3 class="info--text">Create a new Meetup</h3>
             </v-sheet>
@@ -15,7 +15,7 @@
                         <img :src="imageUrl">
                         <v-text-field name="description" label="Description" id="description" v-model="description"
                             multi-line required></v-text-field>
-                        <h5 class="text-info">Choose a Date & Time</h5>
+                        <h4 class="text-info">Choose a Date & Time</h4>
                         <v-sheet class="d-flex justify-center">
                         <div class="mb-2">
                         <v-row>
