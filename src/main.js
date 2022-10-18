@@ -27,7 +27,7 @@ new Vue({
       appId: '1:313664811334:web:537e8c1a467631fc303547'
     }
     initializeApp(firebaseConfig)
-    // this.$store.dispatch('loadMeetups')
+    this.$store.dispatch('loadMeetups')
   }
 }).$mount('#app')
 

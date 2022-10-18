@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { getDatabase, push, ref, set, get } from 'firebase/database'
+import { getDatabase, push, child, ref, set, get } from 'firebase/database'
 
 Vue.use(Vuex)
 
@@ -64,27 +64,29 @@ export default new Vuex.Store({
   },
   actions: {
     loadMeetups ({ commit }) {
-      get().ref('meetups')
-        .once('value').then((data) => {
-          const meetups = []
-          const obj = data.val()
-          for (const key in obj) {
-            meetups.push({
-              id: key,
-              title: obj[key].title,
-              location: obj[key].location,
-              description: obj[key].description,
-              imageUrl: obj[key].imageUrl,
-              date: obj[key].data
-            })
-          }
-          commit('setLoadedMeetups', meetups)
-        })
-        .catch(
-          (error) => {
-            console.log(error)
-          }
-        )
+      const dbRef = ref(getDatabase())
+      get(child(dbRef, `meetups/${'meetupsId'}`)).then((data) => {
+        const meetups = []
+        const obj = data.val()
+        for (const key in obj) {
+          meetups.push({
+            id: key,
+            title: obj[key].title,
+            location: obj[key].location,
+            description: obj[key].description,
+            imageUrl: obj[key].imageUrl,
+            date: obj[key].data
+          })
+        }
+        commit('setLoadedMeetups', meetups)
+        if (data.exists()) {
+          console.log(data.val())
+        } else {
+          console.log('No data available')
+        }
+      }).catch((error) => {
+        console.error(error)
+      })
     },
     createMeetup ({ commit }, payload) {
       const meetup = {
