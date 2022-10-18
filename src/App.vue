@@ -17,6 +17,10 @@
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.title }}
             </v-btn>
+            <v-btn depressed class="purple darken-1 white--text" v-if="userIsAuthenticated" @click="onLogout">
+              <v-icon left>mdi-exit-to-app</v-icon>
+              Logout
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-main>
@@ -31,6 +35,12 @@
                 {{ item.title }}
               </v-card>
             </v-list-item-title>
+              <v-list-item-title>
+                <v-card class="px-5 py-5 white--text" color="primary" v-if="userIsAuthenticated" @click="onLogout">
+                  <v-icon left class="white--text">mdi-exit-to-app</v-icon>
+                  Logout
+                </v-card>
+              </v-list-item-title>
           </v-list>
         </v-navigation-drawer>
       </v-sheet>
@@ -48,12 +58,12 @@ export default {
   computed: {
     menuItems () {
       let menuItems = [
-        { icon: 'mdi-account-plus-outline', title: 'SignUp', link: 'signup' },
+        { icon: 'mdi-account-plus-outline', title: 'SignUp', link: '/signup' },
         { icon: 'mdi-lock-open', title: 'SignIn', link: '/signin' }
       ]
       if (this.userIsAuthenticated) {
         menuItems = [
-          { icon: 'mdi-account-supervisor', title: 'ViewMeetUps', link: '/accv/:id' },
+          { icon: 'mdi-account-supervisor', title: 'ViewMeetUps', link: '/accv/' },
           { icon: 'mdi-map-marker', title: 'Organize MeetUp', link: '/meetup/new' },
           { icon: 'mdi-account', title: 'Profile', link: '/profile' }
         ]
@@ -62,6 +72,11 @@ export default {
     },
     userIsAuthenticated () {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+    }
+  },
+  methods: {
+    onLogout () {
+      this.$store.dispatch('logout')
     }
   }
 }

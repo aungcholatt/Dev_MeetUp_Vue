@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { getDatabase, push, child, ref, set, get } from 'firebase/database'
+import { getDatabase, push, onValue, ref, set } from 'firebase/database'
 
 Vue.use(Vuex)
 
@@ -64,10 +64,12 @@ export default new Vuex.Store({
   },
   actions: {
     loadMeetups ({ commit }) {
-      const dbRef = ref(getDatabase())
-      get(child(dbRef, `meetups/${'meetupsId'}`)).then((data) => {
+      const db = getDatabase()
+      const starCountRef = ref(db, 'meetups/')
+      onValue(starCountRef, (snapshot) => {
         const meetups = []
-        const obj = data.val()
+        const obj = snapshot.val()
+        // const data = snapshot.val()
         for (const key in obj) {
           meetups.push({
             id: key,
@@ -75,27 +77,23 @@ export default new Vuex.Store({
             location: obj[key].location,
             description: obj[key].description,
             imageUrl: obj[key].imageUrl,
-            date: obj[key].data
+            date: obj[key].date
+            // creatorId: obj[key].creatorId
           })
         }
         commit('setLoadedMeetups', meetups)
-        if (data.exists()) {
-          console.log(data.val())
-        } else {
-          console.log('No data available')
-        }
-      }).catch((error) => {
-        console.error(error)
       })
     },
-    createMeetup ({ commit }, payload) {
+    createMeetup ({ commit, getters }, payload) {
       const meetup = {
         title: payload.title,
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
-        date: payload.date.toISOString()
+        date: payload.date.toISOString(),
+        creatorId: getters.user.id
       }
+      writeUserData()
       function writeUserData () {
         const db = getDatabase()
         const meetUpsRef = ref(db, 'meetups/')
@@ -108,18 +106,17 @@ export default new Vuex.Store({
           id: key
         })
         set(data, {
-          // id: data.key,
           title: payload.title,
           location: payload.location,
           imageUrl: payload.imageUrl,
           description: payload.description,
-          date: payload.date.toISOString()
+          date: payload.date.toISOString(),
+          creatorId: getters.user.id
         })
           .catch((error) => {
             console.log(error)
           })
       }
-      writeUserData()
     },
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
@@ -164,6 +161,13 @@ export default new Vuex.Store({
             console.log(error)
           }
         )
+    },
+    autoSignIn ({ commit }, payload) {
+      commit('setUser', { id: payload.uid, registeredMeetups: [] })
+    },
+    logout ({ commit }) {
+      getAuth().signOut()
+      commit('setUser', null)
     },
     clearError ({ commit }) {
       commit('clearError')
