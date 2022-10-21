@@ -10,7 +10,7 @@
         <v-card-title class="text-h5">
             {{ meetup.title }}
         </v-card-title>
-        <v-card-subtitle>{{ meetup.date }}</v-card-subtitle>
+        <v-card-subtitle>{{ meetup.date | date }}</v-card-subtitle>
         <v-card-actions>
             <v-btn :to="'/meetup/'+ meetup.id" color="purple darken-1" class="white--text">
                 <v-icon left>mdi-arrow-right-thick</v-icon>

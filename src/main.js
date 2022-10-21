@@ -2,15 +2,21 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import DateFilter from './filters/date'
 import vuetify from './plugins/vuetify'
 import { initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
-import AlertCmp from './components/Shared/AlertView.vue'
+import { getStorage } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
+import AlertCmp from './components/Shared/AlertView.vue'
+import EditMeetupDetailsDialogVue from './components/Meetup/Edit/EditMeetupDetailsDialog.vue'
+import EditMeetupDateDialogVue from './components/Meetup/Edit/EditMeetupDateDialog.vue'
 
 Vue.config.productionTip = false
+Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertCmp)
-
+Vue.component('app-edit-meetup-details-dialog', EditMeetupDetailsDialogVue)
+Vue.component('app-edit-meetup-date-dialog', EditMeetupDateDialogVue)
 new Vue({
   router,
   store,
@@ -22,29 +28,21 @@ new Vue({
       authDomain: 'meetup-9dbba.firebaseapp.com',
       databaseURL: 'https://meetup-9dbba-default-rtdb.asia-southeast1.firebasedatabase.app',
       projectId: 'meetup-9dbba',
-      storageBucket: 'meetup-9dbba.appspot.com',
+      storageBucket: 'gs://meetup-9dbba.appspot.com',
       messagingSenderId: '450507481014',
       appId: '1:450507481014:web:6d6bbd9cc029999f5deb17'
     }
-    // const firebaseConfig = {
-    //   apiKey: 'AIzaSyBAMdeKVkbfjma1O2JzuqHEjJ-ZyJ99bPQ',
-    //   authDomain: 'dvmeetup.firebaseapp.com',
-    //   databaseURL: 'https://dvmeetup-default-rtdb.asia-southeast1.firebasedatabase.app',
-    //   projectId: 'dvmeetup',
-    //   storageBucket: 'dvmeetup.appspot.com',
-    //   messagingSenderId: '313664811334',
-    //   appId: '1:313664811334:web:537e8c1a467631fc303547'
-    // }
     initializeApp(firebaseConfig)
-    this.$store.dispatch('loadMeetups')
     getAuth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoSignIn', user)
       }
     })
+    this.$store.dispatch('loadMeetups')
   }
 }).$mount('#app')
 
 const db = getDatabase()
+const storage = getStorage()
 const auth = getAuth()
-export { db, auth }
+export { db, storage, auth }

@@ -6,8 +6,8 @@
             <v-btn rounded router to="/accv/" color="purple darken-1" class="mr-2 mb-1 white--text">Explore Meetups</v-btn>
             <v-btn rounded router to="/meetup/new" color="purple darken-1" class="white--text">Organize Meetups</v-btn>
             </v-col>
-         </v-row>
-         </v-sheet>
+            </v-row>
+           </v-sheet>
             <v-sheet class="mt-1 flex-column">
                 <v-carousel style="cursor: pointer;">
                     <v-carousel-item v-for="meetup in meetups" :src="meetup.imageUrl" :key="meetup.id"
@@ -28,7 +28,6 @@ export default {
   computed: {
     meetups () {
       return this.$store.getters.featuredMeetups
-      // return this.$store.dispatch('loadMeetups')
     }
   },
   methods: {
@@ -41,12 +40,12 @@ export default {
 
 <style scoped>
 .title {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    font-size: 1em;
-    bottom: 30px;
-    padding: 20px;
-    left: 40%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 1em;
+  bottom: 30px;
+  padding: 20px;
+  left: 40%;
 }
 </style>

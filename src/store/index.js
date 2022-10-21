@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { getDatabase, push, onValue, ref, set } from 'firebase/database'
-
+import { getDatabase, push, onValue, set, ref, update } from 'firebase/database'
+// import { getStorage, child, update } from 'firebase/storage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     loadedMeetups: [
-      { imageUrl: 'https://media.cntraveler.com/photos/5a8f3b070e2cf839e9dbfa1d/2:1/w_2560%2Cc_limit/NYC_GettyImages-640006562.jpg', id: 'afajfjadjgja323', title: 'Meetup in New York', date: '23-10-2022', location: 'New York', description: 'It is New York' },
-      { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: '23-10-2021', location: 'Paris', description: 'It is Paris' },
-      { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: '23-10-2020', location: 'London', description: 'It is London' }
+      { imageUrl: 'https://media.cntraveler.com/photos/5a8f3b070e2cf839e9dbfa1d/2:1/w_2560%2Cc_limit/NYC_GettyImages-640006562.jpg', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
+      { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: new Date(), location: 'Paris', description: 'It is Paris' },
+      { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: new Date(), location: 'London', description: 'It is London' }
     ],
     user: null,
     loading: false,
@@ -49,6 +49,20 @@ export default new Vuex.Store({
     createMeetup (state, payload) {
       state.loadedMeetups.push(payload)
     },
+    updateMeetup (state, payload) {
+      const meetup = state.loadedMeetups.find(meetup => {
+        return meetup.id === payload.id
+      })
+      if (payload.title) {
+        meetup.title = payload.title
+      }
+      if (payload.description) {
+        meetup.description = payload.description
+      }
+      if (payload.date) {
+        meetup.date = payload.date
+      }
+    },
     setUser (state, payload) {
       state.user = payload
     },
@@ -69,7 +83,6 @@ export default new Vuex.Store({
       onValue(starCountRef, (snapshot) => {
         const meetups = []
         const obj = snapshot.val()
-        // const data = snapshot.val()
         for (const key in obj) {
           meetups.push({
             id: key,
@@ -77,8 +90,8 @@ export default new Vuex.Store({
             location: obj[key].location,
             description: obj[key].description,
             imageUrl: obj[key].imageUrl,
-            date: obj[key].date
-            // creatorId: obj[key].creatorId
+            date: obj[key].date,
+            creatorId: obj[key].creatorId
           })
         }
         commit('setLoadedMeetups', meetups)
@@ -93,6 +106,7 @@ export default new Vuex.Store({
         date: payload.date.toISOString(),
         creatorId: getters.user.id
       }
+      // let imageUrl
       writeUserData()
       function writeUserData () {
         const db = getDatabase()
@@ -113,10 +127,65 @@ export default new Vuex.Store({
           date: payload.date.toISOString(),
           creatorId: getters.user.id
         })
+        // return key
+          // }
+          // writeNewPost()
+          // function writeNewPost () {
+          //   let newKey = key
+          //   const storage = getStorage()
+          //   const newData = {
+          //     image: payload.image
+          //   }
+          //   newKey = push(child(ref(storage), '/meetups/', '/meetup/')).key
+          //   const filename = payload.image.name
+          //   const ext = filename.slice(filename.lastIndexOf('.'))
+          //   storage().ref('meetups/' + newKey + ext)
+          //   const updates = {}
+          //   updates['/meetups/' + newKey] = newData
+          //   updates['/update-meetups/' + ext + '/' + newKey] = newData
+          //   return update(ref(storage), updates)
           .catch((error) => {
             console.log(error)
           })
+        // commit('createMeetup', {
+        //   ...meetup,
+        //   imageUrl: imageUrl,
+        //   id: key
+        // })
+        // set(ref, {
+        //   title: payload.title,
+        //   location: payload.location,
+        //   // imageUrl: payload.imageUrl,
+        //   description: payload.description,
+        //   date: payload.date.toISOString(),
+        //   creatorId: getters.user.id
+        // })
       }
+    },
+    updateMeetupData ({ commit }, payload) {
+      const updateObj = {}
+      if (payload.title) {
+        updateObj.title = payload.title
+      }
+      if (payload.description) {
+        updateObj.description = payload.description
+      }
+      if (payload.date) {
+        updateObj.date = payload.date
+      }
+      const db = getDatabase()
+      update(ref(db, 'meetups', payload.id), {
+        title: payload.title,
+        description: payload.description,
+        date: payload.date
+      })
+        .then(() => {
+          alert('updated successfully!')
+          commit('updateMeetup', payload)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
