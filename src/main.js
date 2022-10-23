@@ -11,12 +11,16 @@ import { getAuth } from 'firebase/auth'
 import AlertCmp from './components/Shared/AlertView.vue'
 import EditMeetupDetailsDialogVue from './components/Meetup/Edit/EditMeetupDetailsDialog.vue'
 import EditMeetupDateDialogVue from './components/Meetup/Edit/EditMeetupDateDialog.vue'
+import EditMeetupTimeDialogVue from './components/Meetup/Edit/EditMeetupTimeDialog.vue'
+import RegisterDialogVue from './components/Meetup/Registration/RegisterDialog.vue'
 
 Vue.config.productionTip = false
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertCmp)
 Vue.component('app-edit-meetup-details-dialog', EditMeetupDetailsDialogVue)
 Vue.component('app-edit-meetup-date-dialog', EditMeetupDateDialogVue)
+Vue.component('app-edit-meetup-time-dialog', EditMeetupTimeDialogVue)
+Vue.component('app-meetup-register-dialog', RegisterDialogVue)
 new Vue({
   router,
   store,
@@ -36,6 +40,7 @@ new Vue({
     getAuth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoSignIn', user)
+        this.$store.dispatch('fetchUserData')
       }
     })
     this.$store.dispatch('loadMeetups')

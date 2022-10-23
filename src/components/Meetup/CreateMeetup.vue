@@ -52,12 +52,11 @@
   </v-container>
 </template>
 <script>
+
 export default {
   name: 'HomeView',
   data: () => ({
     date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    // menu: false,
-    // modal: false,
     menu2: false,
     title: '',
     location: '',

@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { getDatabase, push, onValue, set, ref, update } from 'firebase/database'
+import { getDatabase, push, onValue, set, ref, update, get, child, remove } from 'firebase/database'
 // import { getStorage, child, update } from 'firebase/storage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     loadedMeetups: [
-      { imageUrl: 'https://media.cntraveler.com/photos/5a8f3b070e2cf839e9dbfa1d/2:1/w_2560%2Cc_limit/NYC_GettyImages-640006562.jpg', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
+      { imageUrl: 'https://content.r9cdn.net/rimg/dimg/fd/9a/f4a5d916-lm-11128-16df86b6e99.jpg?width=1750&height=1000&xhint=1411&yhint=767&crop=true', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
       { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: new Date(), location: 'Paris', description: 'It is Paris' },
       { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: new Date(), location: 'London', description: 'It is London' }
     ],
@@ -43,6 +43,19 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    registerUserForMeetup (state, payload) {
+      const id = payload.id
+      if (state.user.registeredMeetups.findIndex(meetup => meetup.id === id) >= 0) {
+        return
+      }
+      state.user.registeredMeetups.push(id)
+      state.user.fbKeys[id] = payload.fbKey
+    },
+    unregisterUserFormMeetup (state, payload) {
+      const registeredMeetups = state.user.registeredMeetups
+      registeredMeetups.splice(registeredMeetups.findIndex(meetup => meetup.id === payload), 1)
+      Reflect.deleteProperty(state.user.fbKeys, payload)
+    },
     setLoadedMeetups (state, payload) {
       state.loadedMeetups = payload
     },
@@ -77,6 +90,43 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    registerUserForMeetup ({ commit, getters }, payload) {
+      const user = getters.user
+      const updates = {}
+      const db = getDatabase()
+      const payloadKey = push(child(ref(db), 'users')).key
+      const registration = { payloadId: payload }
+      const payloadId = registration.id
+      updates['/users/' + user.id + '/registrations/' + payloadKey] = payload
+      return update(ref(db), updates)
+        .then(data => {
+          alert('Now! Meetup is register successfully.')
+          commit('registerUserForMeetup', { id: payloadId, fbKey: data.key })
+          commit('registerUserForMeetup', payload)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    unregisterUserFormMeetup ({ commit, getters }, payload) {
+      commit('setLoading', true)
+      const user = getters.user
+      const fbKey = user.fbKeys
+      const db = getDatabase()
+      const removes = { }
+      const NewfbKey = remove(child(ref(db), '/users/', user.id, '/registrations/'), fbKey).key
+      removes['/users/' + user.id + '/registrations/' + NewfbKey] = removes
+      return remove(ref(db), removes)
+        .then(() => {
+          commit('setLoading', false)
+          alert('Unregister successfully.')
+          commit('unregisterUserFormMeetup', payload)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    // Data Fetching Process
     loadMeetups ({ commit }) {
       const db = getDatabase()
       const starCountRef = ref(db, 'meetups/')
@@ -97,6 +147,7 @@ export default new Vuex.Store({
         commit('setLoadedMeetups', meetups)
       })
     },
+    // Writing Process
     createMeetup ({ commit, getters }, payload) {
       const meetup = {
         title: payload.title,
@@ -127,6 +178,7 @@ export default new Vuex.Store({
           date: payload.date.toISOString(),
           creatorId: getters.user.id
         })
+          // Image Uploading process
         // return key
           // }
           // writeNewPost()
@@ -162,6 +214,7 @@ export default new Vuex.Store({
         // })
       }
     },
+    // Update Exist Data
     updateMeetupData ({ commit }, payload) {
       const updateObj = {}
       if (payload.title) {
@@ -174,10 +227,10 @@ export default new Vuex.Store({
         updateObj.date = payload.date
       }
       const db = getDatabase()
-      update(ref(db, 'meetups', payload.id), {
-        title: payload.title,
-        description: payload.description,
-        date: payload.date
+      const updateKey = update(child(ref(db), '/meetups/', payload.id), updateObj).key
+      update(ref(db, '/meetups/', payload.id, updateKey), {
+        title: updateObj.title,
+        description: updateObj.description
       })
         .then(() => {
           alert('updated successfully!')
@@ -187,6 +240,7 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
+    // Autthentication Process
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -196,7 +250,8 @@ export default new Vuex.Store({
             commit('setLoading', false)
             const newUser = {
               id: user.uid,
-              registeredMeetups: []
+              registeredMeetups: [],
+              fbKeys: {}
             }
             commit('setUser', newUser)
           }
@@ -218,7 +273,8 @@ export default new Vuex.Store({
             commit('setLoading', false)
             const newUser = {
               id: user.uid,
-              registeredMeetups: []
+              registeredMeetups: [],
+              fbKeys: {}
             }
             commit('setUser', newUser)
           }
@@ -232,7 +288,39 @@ export default new Vuex.Store({
         )
     },
     autoSignIn ({ commit }, payload) {
-      commit('setUser', { id: payload.uid, registeredMeetups: [] })
+      commit('setUser', {
+        id: payload.uid,
+        registeredMeetups: [],
+        fbKeys: {}
+      })
+    },
+    // Fetching User Register Data
+    fetchUserData ({ commit, getters }) {
+      const dbRef = ref(getDatabase())
+      get(child(dbRef, `users/${getters.user.id}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val()
+          const dataPairs = data.registrations
+          // console.log(dataPairs)
+          const registeredMeetups = []
+          const swappedPairs = {}
+          for (const key in dataPairs) {
+            registeredMeetups.push(dataPairs[key])
+            swappedPairs[dataPairs[key]] = key
+          }
+          const updatedUser = {
+            id: getters.user.id,
+            registeredMeetups: registeredMeetups,
+            fbKey: swappedPairs
+          }
+          commit('setUser', updatedUser)
+        } else {
+          console.log('No data available')
+        }
+      })
+        .catch((error) => {
+          console.error(error)
+        })
     },
     logout ({ commit }) {
       getAuth().signOut()
