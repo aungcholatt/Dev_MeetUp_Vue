@@ -14,11 +14,11 @@
                       <v-card-text>
                         <v-text-field name="title"
                         id="title"
-                        :v-model="editedTitle"
+                        v-model="editedTitle"
                         required></v-text-field>
                           <v-text-field name="description"
                            id="description" multi-line
-                           :v-model="editedDescription"
+                           v-model="editedDescription"
                            required></v-text-field>
                         </v-card-text>
                     <v-card-actions>
