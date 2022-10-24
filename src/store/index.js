@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { getDatabase, push, onValue, set, ref, update, get, child, remove } from 'firebase/database'
-// import { getStorage, child, update } from 'firebase/storage'
+// import { getStorage, child, update } from 'firebase/database'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -34,6 +34,9 @@ export default new Vuex.Store({
     },
     user (state) {
       return state.user
+    },
+    email (state) {
+      return state.email
     },
     loading (state) {
       return state.loading
@@ -240,7 +243,7 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    // Autthentication Process
+    // Authentication Process
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -273,6 +276,7 @@ export default new Vuex.Store({
             commit('setLoading', false)
             const newUser = {
               id: user.uid,
+              email: user.email,
               registeredMeetups: [],
               fbKeys: {}
             }
@@ -290,9 +294,37 @@ export default new Vuex.Store({
     autoSignIn ({ commit }, payload) {
       commit('setUser', {
         id: payload.uid,
+        email: payload.email,
         registeredMeetups: [],
         fbKeys: {}
       })
+    },
+    fetchUserInfo (UserUID) {
+      const auth = getAuth()
+      get(child(auth, `users/${UserUID}`)).then((snapshot) => {
+        if (snapshot) {
+          const data = snapshot.val()
+          console.log(data)
+          // const dataPairs = data.registrations
+          // // console.log(dataPairs)
+          // const registeredMeetups = []
+          // const swappedPairs = {}
+          // for (const key in dataPairs) {
+          //   registeredMeetups.push(dataPairs[key])
+          //   swappedPairs[dataPairs[key]] = key
+          // }
+          // const updatedUser = {
+          //   id: getters.user.id,
+          //   registeredMeetups: registeredMeetups,
+          //   fbKey: swappedPairs
+          // }
+        } else {
+          console.log('No user data available')
+        }
+      })
+        .catch((error) => {
+          console.error(error)
+        })
     },
     // Fetching User Register Data
     fetchUserData ({ commit, getters }) {
@@ -310,6 +342,7 @@ export default new Vuex.Store({
           }
           const updatedUser = {
             id: getters.user.id,
+            email: getters.user.email,
             registeredMeetups: registeredMeetups,
             fbKey: swappedPairs
           }
