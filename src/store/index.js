@@ -169,19 +169,11 @@ export default new Vuex.Store({
         const refData = data
         console.log(refData)
         const key = data.key
-        commit('createMeetup', {
+        set(data, {
           ...meetup,
           id: key
         })
-        set(data, {
-          title: payload.title,
-          location: payload.location,
-          imageUrl: payload.imageUrl,
-          description: payload.description,
-          date: payload.date.toISOString(),
-          creatorId: getters.user.id
-        })
-          // Image Uploading process
+        // Image Uploading process
         // return key
           // }
           // writeNewPost()
@@ -298,33 +290,6 @@ export default new Vuex.Store({
         registeredMeetups: [],
         fbKeys: {}
       })
-    },
-    fetchUserInfo (UserUID) {
-      const auth = getAuth()
-      get(child(auth, `users/${UserUID}`)).then((snapshot) => {
-        if (snapshot) {
-          const data = snapshot.val()
-          console.log(data)
-          // const dataPairs = data.registrations
-          // // console.log(dataPairs)
-          // const registeredMeetups = []
-          // const swappedPairs = {}
-          // for (const key in dataPairs) {
-          //   registeredMeetups.push(dataPairs[key])
-          //   swappedPairs[dataPairs[key]] = key
-          // }
-          // const updatedUser = {
-          //   id: getters.user.id,
-          //   registeredMeetups: registeredMeetups,
-          //   fbKey: swappedPairs
-          // }
-        } else {
-          console.log('No user data available')
-        }
-      })
-        .catch((error) => {
-          console.error(error)
-        })
     },
     // Fetching User Register Data
     fetchUserData ({ commit, getters }) {

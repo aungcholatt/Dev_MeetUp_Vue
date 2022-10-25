@@ -11,7 +11,7 @@
                 <v-sheet class="d-flex justify-center">
                 <div class="">
                 <v-sheet class="d-flex justify-center info--text mb-4">
-                    <v-icon x-large>mdi-account</v-icon>
+                    <v-icon x-large>mdi-account-box</v-icon>
                 </v-sheet>
                 <v-data-table
                 :headers="headers"
@@ -41,11 +41,11 @@ export default {
       ],
       info: [
         {
-          name: 'User ID:',
+          name: 'User ID :',
           userValue: this.$store.getters.user.id
         },
         {
-          name: 'User Email:',
+          name: 'User Email :',
           userValue: this.$store.getters.user.email
         }
       ]

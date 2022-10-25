@@ -28,13 +28,20 @@ new Vue({
   render: h => h(App),
   created () {
     const firebaseConfig = {
-      apiKey: 'AIzaSyBlUdHCJkgQancGS3ymM15kJAQSoAfYssA',
-      authDomain: 'meetup-9dbba.firebaseapp.com',
-      databaseURL: 'https://meetup-9dbba-default-rtdb.asia-southeast1.firebasedatabase.app',
-      projectId: 'meetup-9dbba',
-      storageBucket: 'gs://meetup-9dbba.appspot.com',
-      messagingSenderId: '450507481014',
-      appId: '1:450507481014:web:6d6bbd9cc029999f5deb17'
+      apiKey: 'AIzaSyBAMdeKVkbfjma1O2JzuqHEjJ-ZyJ99bPQ',
+      authDomain: 'dvmeetup.firebaseapp.com',
+      databaseURL: 'https://dvmeetup-default-rtdb.asia-southeast1.firebasedatabase.app',
+      projectId: 'dvmeetup',
+      storageBucket: 'gs://dvmeetup.appspot.com',
+      messagingSenderId: '313664811334',
+      appId: '1:313664811334:web:537e8c1a467631fc303547'
+      // apiKey: 'AIzaSyBlUdHCJkgQancGS3ymM15kJAQSoAfYssA',
+      // authDomain: 'meetup-9dbba.firebaseapp.com',
+      // databaseURL: 'https://meetup-9dbba-default-rtdb.asia-southeast1.firebasedatabase.app',
+      // projectId: 'meetup-9dbba',
+      // storageBucket: 'gs://meetup-9dbba.appspot.com',
+      // messagingSenderId: '450507481014',
+      // appId: '1:450507481014:web:6d6bbd9cc029999f5deb17'
     }
     initializeApp(firebaseConfig)
     getAuth().onAuthStateChanged((user) => {

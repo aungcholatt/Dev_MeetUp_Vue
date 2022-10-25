@@ -29,18 +29,18 @@
         <v-navigation-drawer v-model="drawer" absolute temporary>
           <v-list>
             <v-list-item-title>
-              <v-card class="px-5 py-5 white--text" color="primary" v-for="item in menuItems" :key="item.title"
-                router :to="item.link">
+              <v-card class="px-5 py-5 white--text" color="primary" v-for="item in menuItems" :key="item.title" router
+                :to="item.link">
                 <v-icon left class="white--text">{{ item.icon }}</v-icon>
                 {{ item.title }}
               </v-card>
             </v-list-item-title>
-              <v-list-item-title>
-                <v-card class="px-5 py-5 white--text" color="primary" v-if="userIsAuthenticated" @click="onLogout">
-                  <v-icon left class="white--text">mdi-exit-to-app</v-icon>
-                  Logout
-                </v-card>
-              </v-list-item-title>
+            <v-list-item-title>
+              <v-card class="px-5 py-5 white--text" color="primary" v-if="userIsAuthenticated" @click="onLogout">
+                <v-icon left class="white--text">mdi-exit-to-app</v-icon>
+                Logout
+              </v-card>
+            </v-list-item-title>
           </v-list>
         </v-navigation-drawer>
       </v-sheet>
