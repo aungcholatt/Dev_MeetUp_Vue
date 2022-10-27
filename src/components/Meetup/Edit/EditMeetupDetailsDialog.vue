@@ -1,62 +1,131 @@
 <template>
-      <v-row justify="center">
-        <v-dialog v-model="editDialog" persistent max-width="350">
-            <template v-slot:activator="{ on }">
-                <v-spacer></v-spacer>
-                <v-btn fab color="primary" dark v-on="on">
-                  <v-icon class="">mdi-pencil</v-icon>
-                </v-btn>
-            </template>
-              <v-card>
-                  <v-card-title class="text-h5 purple--text justify-center">
-                      Edit Meetup
-                    </v-card-title>
-                      <v-card-text>
-                        <v-text-field name="title"
-                        id="title"
-                        v-model="editedTitle"
-                        required></v-text-field>
-                          <v-text-field name="description"
-                           id="description" multi-line
-                           v-model="editedDescription"
-                           required></v-text-field>
-                        </v-card-text>
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                  <v-btn color="red darken-1" text @click="editDialog = false">
-                      close
-                  </v-btn>
-                  <v-btn color="info darken-1" text @click="onSaveChanges">
-                      save
-                 </v-btn>
-              </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-row>
+  <v-row justify="center">
+    <v-dialog v-model="editDialog" persistent max-width="800">
+      <template v-slot:activator="{ on }">
+        <v-spacer></v-spacer>
+        <v-btn fab color="primary" dark v-on="on">
+          <v-icon class="">mdi-pencil</v-icon>
+        </v-btn>
+      </template>
+      <form :meetup="meetup" @submit.prevent="EditedMeetup()">
+      <v-card>
+        <v-card-title class="text-h5 purple--text justify-center">
+          Edit Meetup
+        </v-card-title>
+        <v-card-text>
+          <v-text-field name="title" id="title" v-model="title" required></v-text-field>
+          <v-text-field name="location" id="location" v-model="location" required></v-text-field>
+          <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required></v-text-field>
+          <img :src="imageUrl">
+          <v-text-field name="description" id="description" multi-line v-model="description" required>
+          </v-text-field>
+          <h4 class="text-info">Choose a Date & Time</h4>
+          <v-sheet class="d-flex justify-center">
+            <div class="mb-6">
+              <v-row>
+                <v-col>
+                  <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
+                    min-width="auto">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field v-model="date" label="*Choose Date*" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                        v-on="on"></v-text-field>
+                    </template>
+                    <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+            </div>
+          </v-sheet>
+          <v-sheet class="d-flex justify-center">
+            <div class="mb-6">
+              <v-row>
+                <v-col>
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
+                      min-width="auto">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field v-model="time" label="*Choose Time*" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on">
+                        </v-text-field>
+                      </template>
+                      <v-time-picker v-model="time" @input="menu2 = false"></v-time-picker>
+                    </v-menu>
+                </v-col>
+              </v-row>
+            </div>
+          </v-sheet>
+        </v-card-text>
+        <v-sheet class="d-flex justify-center mb-2">
+        <v-card-actions>
+          <div class="mr-4">
+          <v-btn color="red darken-1" text @click="editDialog = false">
+            close
+          </v-btn>
+          </div>
+          <div class="ml-4">
+          <v-btn color="info darken-1" type="submit">
+            save
+          </v-btn>
+          </div>
+        </v-card-actions>
+        </v-sheet>
+      </v-card>
+    </form>
+    </v-dialog>
+  </v-row>
 </template>
-
 <script>
+import { getDatabase, ref, remove } from 'firebase/database'
 export default {
   props: ['meetup'],
   data () {
     return {
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu2: false,
       editDialog: false,
-      editedTitle: this.meetup.title,
-      editedDescription: this.meetup.description
+      title: this.meetup.title,
+      location: this.meetup.location,
+      imageUrl: this.meetup.imageUrl,
+      description: this.meetup.description,
+      time: this.meetup.time
+    }
+  },
+  computed: {
+    formIsValid () {
+      return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== ''
+    },
+    submittableDateTime () {
+      const date = new Date(this.date)
+      if (typeof this.time === 'string') {
+        const hours = this.time.match(/^(\d+)/)[1]
+        const minutes = this.time.match(/:(\d+)/)[1]
+        date.setHours(hours)
+        date.setMinutes(minutes)
+      } else {
+        date.setHours(this.time.getHours())
+        date.setMinutes(this.time.getMinutes())
+      }
+      return date
     }
   },
   methods: {
-    onSaveChanges () {
-      if (this.editedTitle.trim() === '' || this.editedDescription.trim() === '') {
-        this.editDialog = true
-      } else {
-        this.editDialog = false
-        this.$store.dispatch('updateMeetupData', {
-          id: this.meetup.id,
-          title: this.editedTitle,
-          description: this.editedDescription
-        })
+    EditedMeetup (payload, getters) {
+      if (!this.formIsValid) {
+        return
       }
+      const payloadKey = this.$store.getters.loadedMeetups[0].id
+      const db = getDatabase()
+      const removes = {}
+      removes['/meetups/' + payloadKey] = removes
+      remove(ref(db), '/meetups/', payloadKey, removes)
+      const meetupData = {
+        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        title: this.title,
+        location: this.location,
+        imageUrl: this.imageUrl,
+        description: this.description,
+        time: this.time
+      }
+      this.$store.dispatch('createMeetup', meetupData)
+      this.$router.push('/accv/')
     }
   }
 }

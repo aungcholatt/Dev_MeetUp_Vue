@@ -52,7 +52,8 @@ export default new Vuex.Store({
         return
       }
       state.user.registeredMeetups.push(id)
-      state.user.fbKeys[id] = payload.fbKey
+      this.getters.user.fbKey[payload] = payload.fbKey
+      // state.user.fbKeys[id] = payload.fbKey
     },
     unregisterUserFormMeetup (state, payload) {
       const registeredMeetups = state.user.registeredMeetups
@@ -98,13 +99,14 @@ export default new Vuex.Store({
       const updates = {}
       const db = getDatabase()
       const payloadKey = push(child(ref(db), 'users')).key
-      const registration = { payloadId: payload }
-      const payloadId = registration.id
+      // const registration = { payloadId: payload }
+      // const payloadId = registration.id
+      // const key = id.key
       updates['/users/' + user.id + '/registrations/' + payloadKey] = payload
       return update(ref(db), updates)
         .then(data => {
           alert('Now! Meetup is register successfully.')
-          commit('registerUserForMeetup', { id: payloadId, fbKey: data.key })
+          // commit('registerUserForMeetup', { id: payloadId, fbKey: data.key })
           commit('registerUserForMeetup', payload)
         })
         .catch((error) => {
@@ -113,12 +115,14 @@ export default new Vuex.Store({
     },
     unregisterUserFormMeetup ({ commit, getters }, payload) {
       commit('setLoading', true)
-      const user = getters.user
-      const fbKey = user.fbKeys
+      // const user = getters.user
+      // const fbKey = user.fbKeys
+      const payloadKey = getters.loadedMeetups[0].creatorId
+      const fbkey = getters.user.fbKey[payload]
       const db = getDatabase()
-      const removes = { }
-      const NewfbKey = remove(child(ref(db), '/users/', user.id, '/registrations/'), fbKey).key
-      removes['/users/' + user.id + '/registrations/' + NewfbKey] = removes
+      const removes = {}
+      // const newPostKey = firebase.database().ref().child('posts').push().key
+      removes['/users/' + payloadKey + '/registration/' + fbkey] = removes
       return remove(ref(db), removes)
         .then(() => {
           commit('setLoading', false)
@@ -130,7 +134,7 @@ export default new Vuex.Store({
         })
     },
     // Data Fetching Process
-    loadMeetups ({ commit }) {
+    loadMeetups ({ commit }, id) {
       const db = getDatabase()
       const starCountRef = ref(db, 'meetups/')
       onValue(starCountRef, (snapshot) => {
@@ -157,7 +161,7 @@ export default new Vuex.Store({
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
-        date: payload.date.toISOString(),
+        date: payload.date,
         creatorId: getters.user.id
       }
       // let imageUrl
@@ -209,8 +213,8 @@ export default new Vuex.Store({
         // })
       }
     },
-    // Update Exist Data
-    updateMeetupData ({ commit }, payload) {
+    // Update Meetup Data
+    updateMeetupData ({ commit, getters }, payload, key) {
       const updateObj = {}
       if (payload.title) {
         updateObj.title = payload.title
@@ -221,19 +225,6 @@ export default new Vuex.Store({
       if (payload.date) {
         updateObj.date = payload.date
       }
-      const db = getDatabase()
-      const updateKey = update(child(ref(db), '/meetups/', payload.id), updateObj).key
-      update(ref(db, '/meetups/', payload.id, updateKey), {
-        title: updateObj.title,
-        description: updateObj.description
-      })
-        .then(() => {
-          alert('updated successfully!')
-          commit('updateMeetup', payload)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
     },
     // Authentication Process
     signUserUp ({ commit }, payload) {

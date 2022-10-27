@@ -29,7 +29,7 @@ const routes = [
     beforeEnter: AuthGuard
   },
   {
-    path: '/meetup/:id',
+    path: '/meetups/:id',
     name: 'meetupview',
     props: true,
     component: Meetup

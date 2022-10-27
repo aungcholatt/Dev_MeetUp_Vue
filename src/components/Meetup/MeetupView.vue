@@ -12,7 +12,7 @@
       </v-img>
       <v-card-subtitle>
         <div><span :id="meetup" class="info--text">{{ meetup.date | date }} - {{ meetup.location }}</span></div>
-        <div class="float-left mt-6 d-flex justify-center">
+        <!-- <div class="float-left mt-6 d-flex justify-center">
           <v-row>
             <div class="mr-6 ml-3">
               <app-edit-meetup-date-dialog :meetup="meetup" v-if="userIsCreator">
@@ -23,10 +23,10 @@
               </app-edit-meetup-time-dialog>
             </div>
           </v-row>
-        </div>
+        </div> -->
       </v-card-subtitle>
       <v-card-text>
-        <div class="ml-2 mt-5">
+        <div class="ml-1 mt-1">
           <p :id="meetup">{{ meetup.description }}</p>
         </div>
       </v-card-text>
@@ -52,6 +52,7 @@ export default {
   computed: {
     meetup () {
       return this.$store.getters.loadedMeetup(this.id)
+      // return this.$store.getters.loadedMeetups[0]
     },
     userIsAuthenticated () {
       return this.$store.getters.user !== null && this.$store.getters.user !== undefined
