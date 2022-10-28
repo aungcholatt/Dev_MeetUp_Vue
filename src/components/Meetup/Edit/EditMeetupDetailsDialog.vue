@@ -8,67 +8,63 @@
         </v-btn>
       </template>
       <form :meetup="meetup" @submit.prevent="EditedMeetup()">
-      <v-card>
-        <v-card-title class="text-h5 purple--text justify-center">
-          Edit Meetup
-        </v-card-title>
-        <v-card-text>
-          <v-text-field name="title" id="title" v-model="title" required></v-text-field>
-          <v-text-field name="location" id="location" v-model="location" required></v-text-field>
-          <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required></v-text-field>
-          <img :src="imageUrl">
-          <v-text-field name="description" id="description" multi-line v-model="description" required>
-          </v-text-field>
-          <h4 class="text-info">Choose a Date & Time</h4>
-          <v-sheet class="d-flex justify-center">
-            <div class="mb-6">
-              <v-row>
-                <v-col>
-                  <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
-                    min-width="auto">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field v-model="date" label="*Choose Date*" prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                        v-on="on"></v-text-field>
-                    </template>
-                    <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
-                  </v-menu>
-                </v-col>
-              </v-row>
-            </div>
-          </v-sheet>
-          <v-sheet class="d-flex justify-center">
-            <div class="mb-6">
-              <v-row>
-                <v-col>
-                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition" offset-y
-                      min-width="auto">
+        <v-card>
+          <v-card-title class="text-h5 purple--text justify-center">
+            Edit Meetup
+          </v-card-title>
+          <v-card-text>
+            <v-text-field name="title" id="title" v-model="title" required></v-text-field>
+            <v-text-field name="location" id="location" v-model="location" required></v-text-field>
+            <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required>
+            </v-text-field>
+            <img :src="imageUrl">
+            <v-text-field name="description" id="description" multi-line v-model="description" required>
+            </v-text-field>
+            <h4 class="text-info">Choose a Date & Time</h4>
+            <v-sheet class="d-flex justify-center">
+              <div class="mb-6">
+                <v-row>
+                  <v-col>
+                    <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
+                      transition="scale-transition" offset-y min-width="auto">
                       <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="time" label="*Choose Time*" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on">
-                        </v-text-field>
+                        <v-text-field v-model="date" label="*Choose Date*" prepend-icon="mdi-calendar" readonly
+                          v-bind="attrs" v-on="on"></v-text-field>
                       </template>
-                      <v-time-picker v-model="time" @input="menu2 = false"></v-time-picker>
+                      <v-date-picker v-model="date" @input="menu2 = false"></v-date-picker>
                     </v-menu>
-                </v-col>
-              </v-row>
-            </div>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-sheet>
+            <v-sheet class="d-flex justify-center">
+              <div class="mb-6">
+                <v-row>
+                  <v-col>
+                  <v-row justify="space-around" align="center">
+                    <v-time-picker v-model="time" scrollable></v-time-picker>
+                  </v-row>
+                  </v-col>
+                </v-row>
+              </div>
+            </v-sheet>
+          </v-card-text>
+          <v-sheet class="d-flex justify-center mb-2">
+            <v-card-actions>
+              <div class="mr-4">
+                <v-btn color="red darken-1" text @click="editDialog = false">
+                  close
+                </v-btn>
+              </div>
+              <div class="ml-4">
+                <v-btn color="info darken-1" type="submit">
+                  save
+                </v-btn>
+              </div>
+            </v-card-actions>
           </v-sheet>
-        </v-card-text>
-        <v-sheet class="d-flex justify-center mb-2">
-        <v-card-actions>
-          <div class="mr-4">
-          <v-btn color="red darken-1" text @click="editDialog = false">
-            close
-          </v-btn>
-          </div>
-          <div class="ml-4">
-          <v-btn color="info darken-1" type="submit">
-            save
-          </v-btn>
-          </div>
-        </v-card-actions>
-        </v-sheet>
-      </v-card>
-    </form>
+        </v-card>
+      </form>
     </v-dialog>
   </v-row>
 </template>
@@ -80,12 +76,13 @@ export default {
     return {
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu2: false,
+      picker: null,
+      time: this.meetup.time,
       editDialog: false,
       title: this.meetup.title,
       location: this.meetup.location,
       imageUrl: this.meetup.imageUrl,
-      description: this.meetup.description,
-      time: this.meetup.time
+      description: this.meetup.description
     }
   },
   computed: {
@@ -117,12 +114,11 @@ export default {
       removes['/meetups/' + payloadKey] = removes
       remove(ref(db), '/meetups/', payloadKey, removes)
       const meetupData = {
-        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         title: this.title,
         location: this.location,
         imageUrl: this.imageUrl,
         description: this.description,
-        time: this.time
+        date: this.submittableDateTime
       }
       this.$store.dispatch('createMeetup', meetupData)
       this.$router.push('/accv/')

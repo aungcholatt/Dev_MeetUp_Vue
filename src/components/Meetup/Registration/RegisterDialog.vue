@@ -49,13 +49,15 @@ export default {
     }
   },
   methods: {
-    onAgree () {
+    onAgree (id) {
       if (this.userIsRegistered) {
         this.$store.dispatch('unregisterUserFormMeetup', this.meetupId)
         this.regiserDialog = true
+        this.$router.push('/')
       } else {
         this.$store.dispatch('registerUserForMeetup', this.meetupId)
         this.registerDialog = false
+        this.$router.push('/')
       }
     }
   }

@@ -161,7 +161,7 @@ export default new Vuex.Store({
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
-        date: payload.date,
+        date: payload.date.toISOString(),
         creatorId: getters.user.id
       }
       // let imageUrl
@@ -211,19 +211,6 @@ export default new Vuex.Store({
         //   date: payload.date.toISOString(),
         //   creatorId: getters.user.id
         // })
-      }
-    },
-    // Update Meetup Data
-    updateMeetupData ({ commit, getters }, payload, key) {
-      const updateObj = {}
-      if (payload.title) {
-        updateObj.title = payload.title
-      }
-      if (payload.description) {
-        updateObj.description = payload.description
-      }
-      if (payload.date) {
-        updateObj.date = payload.date
       }
     },
     // Authentication Process
