@@ -10,6 +10,13 @@
             <v-text-field name="title" label="Title" id="title" v-model="title" required></v-text-field>
             <v-text-field name="location" label="Location" id="location" v-model="location" required>
             </v-text-field>
+            <!-- <v-btn color="primary" @click="onPickFile()">
+              Upload Image
+            </v-btn>
+            <input type="file" style="display: none" ref="fileInput" accept="image/*" @change="onFilePicked">
+            <v-row class="mb-2 justify-center "><img :src="imageUrl" height="150"></v-row>
+            <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required>
+            </v-text-field> -->
             <v-text-field name="imageUrl" label="Image URL" id="image-url" class="shrink" v-model="imageUrl" required>
             </v-text-field>
             <img :src="imageUrl">

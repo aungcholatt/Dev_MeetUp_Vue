@@ -52,8 +52,8 @@ export default new Vuex.Store({
         return
       }
       state.user.registeredMeetups.push(id)
-      this.getters.user.fbKey[payload] = payload.fbKey
-      // state.user.fbKeys[id] = payload.fbKey
+      // this.getters.user.fbKey[payload] = payload.fbKey
+      state.user.fbKeys[id] = payload.fbKey
     },
     unregisterUserFormMeetup (state, payload) {
       const registeredMeetups = state.user.registeredMeetups
@@ -99,14 +99,14 @@ export default new Vuex.Store({
       const updates = {}
       const db = getDatabase()
       const payloadKey = push(child(ref(db), 'users')).key
-      // const registration = { payloadId: payload }
-      // const payloadId = registration.id
+      const registration = { payloadId: payload }
+      const payloadId = registration.id
       // const key = id.key
       updates['/users/' + user.id + '/registrations/' + payloadKey] = payload
       return update(ref(db), updates)
         .then(data => {
           alert('Now! Meetup is register successfully.')
-          // commit('registerUserForMeetup', { id: payloadId, fbKey: data.key })
+          commit('registerUserForMeetup', { id: payloadId, fbKey: data.key })
           commit('registerUserForMeetup', payload)
         })
         .catch((error) => {
@@ -115,15 +115,13 @@ export default new Vuex.Store({
     },
     unregisterUserFormMeetup ({ commit, getters }, payload) {
       commit('setLoading', true)
-      // const user = getters.user
-      // const fbKey = user.fbKeys
       const payloadKey = getters.loadedMeetups[0].creatorId
-      const fbkey = getters.user.fbKey[payload]
+      // const key = getters.user.fbKey[payload]
       const db = getDatabase()
-      const removes = {}
-      // const newPostKey = firebase.database().ref().child('posts').push().key
-      removes['/users/' + payloadKey + '/registration/' + fbkey] = removes
-      return remove(ref(db), removes)
+      const removes = { payloadKey }
+      const newPostKey = push(child(ref(db), 'users'), payloadKey).key
+      removes['/users/' + payloadKey + '/registration/' + newPostKey] = removes
+      return remove(ref(db), 'users', removes)
         .then(() => {
           commit('setLoading', false)
           alert('Unregister successfully.')
