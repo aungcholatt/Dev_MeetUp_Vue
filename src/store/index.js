@@ -1,8 +1,9 @@
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { getDatabase, push, onValue, set, ref, update, get, child, remove } from 'firebase/database'
-// import { getStorage, child, update } from 'firebase/database'
+import { getStorage, uploadBytes, ref as storageReference, getDownloadURL } from 'firebase/storage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -157,58 +158,57 @@ export default new Vuex.Store({
       const meetup = {
         title: payload.title,
         location: payload.location,
-        imageUrl: payload.imageUrl,
+        // imageUrl: payload.imageUrl,
         description: payload.description,
         date: payload.date.toISOString(),
         creatorId: getters.user.id
       }
-      // let imageUrl
+      let imageUrl
+      let key
       writeUserData()
       function writeUserData () {
         const db = getDatabase()
         const meetUpsRef = ref(db, 'meetups/')
         const data = push(meetUpsRef)
-        const refData = data
-        console.log(refData)
-        const key = data.key
+        // const refData = data
+        // console.log(refData)
+        key = data.key
         set(data, {
-          ...meetup,
-          id: key
+          // ...meetup,
+          // id: key
         })
-        // Image Uploading process
-        // return key
-          // }
-          // writeNewPost()
-          // function writeNewPost () {
-          //   let newKey = key
-          //   const storage = getStorage()
-          //   const newData = {
-          //     image: payload.image
-          //   }
-          //   newKey = push(child(ref(storage), '/meetups/', '/meetup/')).key
-          //   const filename = payload.image.name
-          //   const ext = filename.slice(filename.lastIndexOf('.'))
-          //   storage().ref('meetups/' + newKey + ext)
-          //   const updates = {}
-          //   updates['/meetups/' + newKey] = newData
-          //   updates['/update-meetups/' + ext + '/' + newKey] = newData
-          //   return update(ref(storage), updates)
+          .then((data) => {
+            return key
+          })
+          .then(key => {
+            const uploadImage = () => {
+              const filename = payload.image
+              const storage = getStorage()
+              const storageRef = storageReference(storage, 'meetups/' + key + '.' + filename)
+
+              uploadBytes(storageRef, filename)
+                .then(snapshot => {
+                  console.log('Uploaded a blob or file!')
+                  return getDownloadURL(snapshot.ref)
+                })
+                .then(downloadURLs => {
+                  imageUrl = downloadURLs
+                  // alert(imageUrl)
+                  set(data, {
+                    ...meetup,
+                    imageUrl: imageUrl,
+                    id: key
+                  })
+                })
+            }
+            uploadImage()
+          })
+          .then(() => {
+            alert('Successfully created!')
+          })
           .catch((error) => {
             console.log(error)
           })
-        // commit('createMeetup', {
-        //   ...meetup,
-        //   imageUrl: imageUrl,
-        //   id: key
-        // })
-        // set(ref, {
-        //   title: payload.title,
-        //   location: payload.location,
-        //   // imageUrl: payload.imageUrl,
-        //   description: payload.description,
-        //   date: payload.date.toISOString(),
-        //   creatorId: getters.user.id
-        // })
       }
     },
     // Authentication Process

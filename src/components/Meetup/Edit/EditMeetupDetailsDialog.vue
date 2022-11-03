@@ -15,9 +15,14 @@
           <v-card-text>
             <v-text-field name="title" id="title" v-model="title" required></v-text-field>
             <v-text-field name="location" id="location" v-model="location" required></v-text-field>
-            <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required>
+              <v-btn color="primary" @click="onPickFile()">
+                Upload Image
+              </v-btn>
+              <input type="file" style="display: none" ref="fileInput" accept="image/*" @change="onFilePicked">
+              <v-row class="mb-2 justify-center "><img :src="imageUrl" height="150"></v-row>
+            <!-- <v-text-field name="imageUrl" label="Image URL" id="imageUrl" class="shrink" v-model="imageUrl" required>
             </v-text-field>
-            <img :src="imageUrl">
+            <img :src="imageUrl"> -->
             <v-text-field name="description" id="description" multi-line v-model="description" required>
             </v-text-field>
             <h4 class="text-info">Choose a Date & Time</h4>
@@ -79,6 +84,7 @@ export default {
       picker: null,
       time: this.meetup.time,
       editDialog: false,
+      image: null,
       title: this.meetup.title,
       location: this.meetup.location,
       imageUrl: this.meetup.imageUrl,
@@ -108,6 +114,10 @@ export default {
       if (!this.formIsValid) {
         return
       }
+      if (!this.image) {
+        alert('Please Choose Image File!')
+        return
+      }
       const payloadKey = this.$store.getters.loadedMeetups[0].id
       const db = getDatabase()
       const removes = {}
@@ -116,12 +126,28 @@ export default {
       const meetupData = {
         title: this.title,
         location: this.location,
-        imageUrl: this.imageUrl,
+        image: this.image,
         description: this.description,
         date: this.submittableDateTime
       }
       this.$store.dispatch('createMeetup', meetupData)
       this.$router.push('/accv/')
+    },
+    onPickFile () {
+      this.$refs.fileInput.click()
+    },
+    onFilePicked (event) {
+      const files = event.target.files
+      const filename = files[0].name
+      if (filename.lastIndexOf('.') <= 0) {
+        return alert('please add a valid file!')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.image = files[0]
     }
   }
 }
