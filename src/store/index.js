@@ -204,7 +204,7 @@ export default new Vuex.Store({
             uploadImage()
           })
           .then(() => {
-            alert('Successfully created!')
+            alert('Success Information!')
           })
           .catch((error) => {
             console.log(error)

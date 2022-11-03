@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     formIsValid () {
-      return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== ''
+      return this.title !== '' && this.location !== '' && this.imageUrl !== '' && this.description !== '' && this.setHours !== ''
     },
     submittableDateTime () {
       const date = new Date(this.date)
@@ -115,7 +115,11 @@ export default {
         return
       }
       if (!this.image) {
-        alert('Please Choose Image File!')
+        alert('Please Choose Image File Edit!')
+        return
+      }
+      if (!this.time) {
+        alert('Please Choose Time Edit!')
         return
       }
       const payloadKey = this.$store.getters.loadedMeetups[0].id
