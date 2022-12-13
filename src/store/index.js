@@ -132,7 +132,7 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    // Data Fetching Process
+    // Data Fetching
     loadMeetups ({ commit }, id) {
       const db = getDatabase()
       const starCountRef = ref(db, 'meetups/')
@@ -153,7 +153,7 @@ export default new Vuex.Store({
         commit('setLoadedMeetups', meetups)
       })
     },
-    // Writing Process
+    // Writing
     createMeetup ({ commit, getters }, payload) {
       const meetup = {
         title: payload.title,
@@ -211,7 +211,7 @@ export default new Vuex.Store({
           })
       }
     },
-    // Authentication Process
+    // Authentication
     signUserUp ({ commit }, payload) {
       commit('setLoading', true)
       commit('clearError')
