@@ -11,7 +11,7 @@ export default new Vuex.Store({
     loadedMeetups: [
       { imageUrl: 'https://www.planetware.com/photos-large/USNY/new-york-city-central-park-1.jpg', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
       { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: new Date(), location: 'Paris', description: 'It is Paris' },
-      { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: new Date(), location: 'London', description: 'It is London' }
+      { imageUrl: 'https://a.cdn-hotels.com/gdcs/production27/d274/43014cca-c88c-4061-ace8-58edc24531ee.jpg?impolicy=fcrop&w=800&h=533&q=medium', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: new Date(), location: 'London', description: 'It is London' }
     ],
     user: null,
     loading: false,
