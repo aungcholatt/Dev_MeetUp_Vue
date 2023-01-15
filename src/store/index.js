@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loadedMeetups: [
-      { imageUrl: 'https://content.r9cdn.net/rimg/dimg/fd/9a/f4a5d916-lm-11128-16df86b6e99.jpg?width=1750&height=1000&xhint=1411&yhint=767&crop=true', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
+      { imageUrl: 'https://www.planetware.com/photos-large/USNY/new-york-city-central-park-1.jpg', id: 'afajfjadjgja323', title: 'Meetup in New York', date: new Date(), location: 'New York', description: 'It is New York' },
       { imageUrl: 'https://media.nomadicmatt.com/2022/parisguide2.jpeg', id: 'asfashgfadefg34', title: 'Meetup in Paris', date: new Date(), location: 'Paris', description: 'It is Paris' },
       { imageUrl: 'https://www.nationsonline.org/gallery/UK/London-CBD.jpg', id: 'aadsfhbkhlk1242', title: 'Meetup in London', date: new Date(), location: 'London', description: 'It is London' }
     ],
