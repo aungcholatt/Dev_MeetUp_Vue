@@ -49,9 +49,9 @@ export default {
     }
   },
   computed: {
-    comparePasswords () {
-      return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
-    },
+    // comparePasswords () {
+    //   return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
+    // },
     user () {
       return this.$store.getters.user
     },
